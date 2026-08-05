@@ -67,6 +67,36 @@ const CURSO = [
 { n:0, t:"Arranque", sub:"Qué es Claude Code, cómo comprobar que quedó bien instalado y cómo es una sesión.", les:[
 
 { t:"Un agente que vive en la terminal", b:[
+{k:"p", h:"Una advertencia sobre el orden de lectura: los módulos del 3 al 8 —comandos, skills, subagentes, hooks, MCP, plugins— son capacidades que se añaden cuando aparece la necesidad, no una lista que haya que completar."},
+  {k:"p", h:"Si intentas montarlo todo antes de trabajar, acabas con una configuración elaborada que no usas y que además te estorba. Haz los tres primeros, trabaja una semana, y vuelve al que resuelva lo que te haya molestado."},
+
+{k:"tbl", head:["Lo que pides","Lo que puede hacer de más que un chat"], rows:[
+    ["«Arregla este fallo»","Reproducirlo ejecutando el proyecto, y verificar el arreglo"],
+    ["«Añade una prueba»","Correrla y comprobar que falla antes y pasa después"],
+    ["«¿Por qué cambió esto?»","Buscar en el historial de git y leer los commits"],
+    ["«Actualiza esta dependencia»","Instalarla y ver si algo se rompió"]
+  ]},
+  {k:"p", h:"La columna derecha es la que justifica todo el curso. Sin ella, cualquier chat sirve; con ella, el ciclo de escribir-comprobar-corregir ocurre sin que tú seas el mensajero entre las dos mitades."},
+
+{k:"p", h:"Sobre para quién es este curso: para quien ya programa. Estas herramientas aceleran a quien sabe leer el resultado y multiplican los errores de quien no — con una seguridad que hace difícil detectarlos. No es una advertencia moral, es una descripción de cómo funciona."},
+  {k:"p", h:"Y sobre qué esperar al final: once módulos, veinticuatro checkpoints y un proyecto tuyo configurado. No vas a salir sabiéndolo todo; vas a salir con las cinco capas montadas —memoria, permisos, comandos, verificación y automatización— y con criterio para decidir cuándo añadir la sexta."},
+
+{k:"p", h:"Vale la pena situar de qué tamaño es el cambio. No estás aprendiendo una herramienta más: estás cambiando quién ejecuta. Hasta ahora tú escribías y la máquina obedecía instrucciones exactas. Ahora describes un resultado y algo intermedio decide los pasos."},
+  {k:"p", h:"Eso trae una habilidad nueva que no tenías que ejercitar antes: <strong>saber cuándo desconfiar</strong>. Un compilador que se equivoca da un error; un agente que se equivoca da una respuesta con la misma seguridad que cuando acierta. Buena parte de este curso es montar comprobaciones para no depender de esa seguridad."},
+
+{k:"glos", i:[
+    ["sesión","Una conversación con el agente, desde que escribes <code>claude</code> hasta que sales. Al salir se pierde, salvo lo que hayas dejado escrito en archivos."],
+    ["contexto","Todo lo que el agente tiene delante al responder: tu petición, los archivos que leyó, las salidas de los comandos que ejecutó y las reglas del proyecto. Es limitado."],
+    ["herramienta","Cada cosa que el agente sabe hacer además de escribir: leer un archivo, ejecutar un comando, buscar en la web. Los permisos deciden cuáles puede usar sin preguntarte."],
+    ["CLAUDE.md","El archivo de reglas del proyecto. Se lee solo al empezar cada sesión."],
+    ["hook","Un comando tuyo que se ejecuta automáticamente antes o después de que el agente use una herramienta. Es código, no una petición."],
+    ["MCP","Un protocolo para conectar el agente a sistemas externos —una base de datos, un gestor de incidencias— con herramientas que aparecen como propias."]
+  ]},
+
+{k:"p", h:"Antes de nada, la pregunta que decide si este curso te sirve: <strong>¿pasas más tiempo en el editor o en la terminal?</strong> Si es lo primero, Claude Code te va a parecer incómodo las primeras horas. Si es lo segundo, va a encajar en lo que ya haces desde el primer día."},
+  {k:"tr", t:"No es un chat que además escribe código", h:"<p>La confusión más común es tratarlo como un asistente de conversación al que le pides fragmentos. Si lo usas así, es peor que un chat en el navegador — tiene menos interfaz y ninguna ventaja.</p><p>La diferencia está en que <strong>puede actuar y comprobar</strong>: lee tus archivos, ejecuta tus pruebas, ve el error real y vuelve a intentarlo. Ese ciclo cerrado es todo lo que ofrece de más, y es mucho.</p><p>La consecuencia práctica: en vez de «escríbeme una función que valide correos», pídele «añade validación de correo al formulario de registro y comprueba que las pruebas siguen pasando». Lo segundo aprovecha lo que sabe hacer; lo primero no.</p>"},
+  {k:"p", h:"Y una advertencia sobre el ritmo del curso. Son once módulos y no hay que hacerlos seguidos. Los tres primeros —arranque, memoria y permisos— son los que cambian el día a día. Del cuatro en adelante son capacidades que se añaden cuando las necesitas, y si intentas configurarlo todo antes de trabajar acabarás con un montaje que no usas."},
+
   {k:"p", h:"Claude Code no es un editor ni una extensión: es un programa de terminal al que le hablas en español y que <strong>trabaja sobre la carpeta donde lo abriste</strong>. Lee tus archivos, los modifica, ejecuta comandos y lee lo que devuelven."},
   {k:"p", h:"Esa última parte es la que lo diferencia de un chat. Un chat te da una respuesta y te toca a ti probarla. Un agente en la terminal <strong>puede ejecutar la prueba, ver que falla y volver a intentarlo</strong> sin pasar por ti."},
   {k:"cr", t:"El bucle que lo define", h:"<p>Le pides algo. Lee lo que necesita, propone cambios, ejecuta lo que haga falta para comprobarlos, y mira el resultado. Si salió mal, corrige y repite.</p><p>Tú entras en dos momentos: cuando quiere hacer algo que no le has autorizado, y al final, cuando revisas lo que hizo. Todo el curso trata de <strong>afinar esos dos momentos</strong>: que te pregunte lo justo, y que lo que te entregue se pueda revisar.</p>"},
@@ -80,6 +110,26 @@ const CURSO = [
 ]},
 
 { t:"Comprobar que quedó bien instalado", b:[
+{k:"p", h:"Si algo de este módulo falla y no sabes por dónde seguir, el orden de diagnóstico es siempre el mismo: ¿existe el comando?, ¿responde?, ¿está autenticado? Cada pregunta tiene un arreglo distinto, y saltarse el orden hace perder tiempo."},
+  {k:"p", h:"El verificador está montado con esa misma secuencia, así que su primer fallo suele ser el que hay que arreglar — los siguientes se caen solos cuando resuelves ese."},
+
+{k:"p", h:"Un apunte sobre lo que este curso no cubre y conviene saber que existe: hay una extensión para trabajar desde el editor y una versión que corre en el navegador. Son la misma herramienta con otra piel."},
+  {k:"p", h:"El curso se hace entero en la terminal a propósito: es donde están todas las capacidades y donde lo que aprendes se traslada a las otras formas. Al revés no funciona igual."},
+
+{k:"p", h:"Merece la pena entender la diferencia entre las dos formas de instalarlo, porque explica casi todos los problemas raros. El instalador nativo deja un binario que se actualiza solo; la instalación por npm depende de tu versión de Node y se actualiza cuando tú lo pidas."},
+  {k:"p", h:"Ninguna es mejor. Lo que da problemas es tener las dos: la terminal ejecuta una, tú actualizas la otra, y el comportamiento no coincide con lo que lees en ningún sitio."},
+
+{k:"cr", t:"Qué mira exactamente el verificador del curso", h:"<p>Los checkpoints de este módulo no te preguntan si instalaste: lo comprueban ejecutando lo mismo que ejecutarías tú.</p><p>Buscan el comando en tu <code>PATH</code>, le piden la versión, y comprueban que la autenticación esté resuelta. Por eso un checkpoint automático no se puede marcar a mano — no hay nada que marcar: o el comando responde o no.</p><p>Cuando uno falle, léelo con cuidado antes de tocar nada: el mensaje distingue «no está instalado» de «está pero no responde» de «responde pero no está autenticado», y cada uno se arregla de forma distinta.</p>"},
+  {k:"p", h:"Una cosa más sobre autenticación: hay varias formas y conviven mal. Si tienes una variable de entorno con una clave puesta de hace meses, va a ganar sobre la sesión que inicies ahora, y el resultado es que trabajas contra una cuenta distinta a la que crees. Si algo no cuadra, esa variable es el primer sitio donde mirar."},
+
+{k:"p", h:"Una cosa que conviene mirar en la salida de <code>claude doctor</code> aunque no la entiendas del todo: <strong>cómo se instaló</strong>. Si dice que fue por npm y tú recuerdas haber usado el instalador —o al revés— tienes dos, y ese es el origen de los comportamientos que después no se explican."},
+  {k:"p", h:"Y sobre las actualizaciones: conviene tenerlas automáticas. Estas herramientas cambian rápido, y una versión de hace tres meses puede no tener funciones que la documentación da por hechas. Si algo del curso no te aparece, actualizar es lo primero que hay que probar."},
+
+{k:"p", h:"Un apunte sobre el modelo, porque es la pregunta que sale enseguida: no hace falta elegirlo. Claude Code trae uno por defecto que es el adecuado para casi todo, y se cambia con <code>/model</code> si algún día lo necesitas. Empezar tocando eso es optimizar antes de tener un problema."},
+
+{k:"cr", t:"Por qué se comprueba antes de pedir nada", h:"<p>Tres cuartas partes de los problemas del primer día no son del agente: son de instalación. Una versión vieja que no tiene los comandos que espera el curso, una autenticación a medias, o una instalación por un gestor de paquetes que se pisa con otra.</p><p><code>claude doctor</code> existe justamente para eso y casi nadie lo conoce. Te dice qué versión corre, cómo se instaló y si las actualizaciones automáticas funcionan — las tres cosas que después explican comportamientos raros.</p><p>Dos minutos aquí ahorran una tarde de «a mí no me funciona igual que en el vídeo».</p>"},
+  {k:"tr", t:"Dos instalaciones a la vez", h:"<p>El problema más difícil de diagnosticar de este módulo: tener Claude Code instalado por dos vías —el instalador nativo y npm, por ejemplo— y que la terminal ejecute una mientras tú actualizas la otra.</p><p>El síntoma es que <code>claude --version</code> no cambia después de actualizar, o que una función que la documentación describe no aparece. Se comprueba con <code>which -a claude</code>: si devuelve más de una ruta, tienes dos, y conviene dejar una sola.</p>"},
+
   {k:"p", h:"Antes de pedirle nada conviene confirmar tres cosas: que el programa está, que su instalación está sana, y que sabe quién eres. Las tres se comprueban desde la terminal en menos de un minuto."},
   {k:"p", h:"El primero es el comando más útil del curso y casi nadie lo conoce: <code>claude doctor</code> revisa la instalación y te dice qué versión corre, cómo se instaló y si las actualizaciones automáticas funcionan."},
   {k:"ej", id:"0.1", min:"6 minutos", t:"revisar tu instalación",
@@ -105,6 +155,27 @@ const CURSO = [
 ]},
 
 { t:"Tu primera sesión", b:[
+{k:"p", h:"Una nota sobre el coste, porque es la duda que frena a mucha gente: cada sesión consume según cuánto lea y cuánto escriba. Una sesión de trabajo normal es barata; la que se descontrola es la que lleva dos horas abierta acumulando contexto."},
+  {k:"p", h:"La costumbre de una sesión por tarea, además de mejorar las respuestas, es lo que mantiene el gasto predecible."},
+
+{k:"p", h:"Sobre el modo de planificación, que aparece pronto y confunde: hay una forma de pedirle que <strong>proponga antes de tocar nada</strong>. Te devuelve un plan, tú lo apruebas o lo corriges, y solo entonces actúa."},
+  {k:"p", h:"Merece la pena cogerle el gusto para lo que toque varios archivos. El coste de corregir un plan de cinco líneas es mucho menor que el de revisar quince archivos ya modificados, y es la forma más barata de descubrir que entendiste una cosa y él otra."},
+
+{k:"p", h:"Cuando salgas de la sesión, conviene saber qué se pierde y qué no. <strong>Se pierde la conversación</strong>: lo que hablasteis, lo que leyó, lo que dedujo. <strong>No se pierde lo que quedó escrito en archivos</strong>: el código, las notas, las reglas."},
+  {k:"p", h:"De ahí la costumbre que sostiene todo lo demás: si algo importa para mañana, tiene que acabar en un archivo. Una conclusión que solo existe en la conversación es una conclusión que se evapora al cerrar la terminal."},
+
+{k:"p", h:"Sobre qué pedir en esa primera sesión, porque la elección condiciona la impresión que te llevas: <strong>algo real y pequeño de tu proyecto</strong>. Ni «hola» —que no muestra nada— ni «refactoriza el módulo de pagos» —que muestra demasiado sin que puedas juzgarlo."},
+  {k:"p", h:"Lo que mejor funciona el primer día es pedirle que <em>lea</em> antes que escriba: «explícame qué hace este módulo y cómo se conecta con el resto». Ahí ves cómo explora, qué archivos elige mirar y si entendió la estructura — que es la información que necesitas para saber cuánto te puedes fiar después."},
+
+{k:"p", h:"Dos costumbres que se cogen el primer día y ahorran muchas horas después."},
+  {k:"p", h:"<strong>Trabaja sobre git limpio.</strong> Antes de pedir algo grande, comprueba que no tienes cambios sin guardar. Es lo que convierte cualquier destrozo en un <code>git checkout .</code> en vez de en una tarde de reconstrucción, y es la razón por la que se puede dejar a un agente tocar archivos sin ansiedad."},
+  {k:"p", h:"<strong>Pide una cosa cada vez.</strong> Una petición con tres encargos dentro produce tres resultados a medias. Y cuando falla, no sabes cuál de los tres lo rompió — que es el coste real, más que el resultado en sí."},
+
+{k:"tr", t:"La sesión que se alarga hasta que empeora", h:"<p>Una sesión larga acumula contexto: cada archivo leído y cada salida de comando se quedan. Llega un punto en que el agente responde peor, y no es que se canse — es que lo relevante está enterrado bajo cosas de hace media hora.</p><p>La señal es reconocible: empieza a repetir cosas que ya hizo, o a proponer cambios en archivos que dejaron de importar hace rato.</p><p>La costumbre que lo evita: <strong>una sesión por tarea</strong>. Cuando cambies de asunto, sal y vuelve a entrar. Lo que necesitas conservar entre sesiones no se guarda en la conversación — se escribe en el proyecto, que es de lo que trata el módulo siguiente.</p>"},
+
+{k:"cr", t:"Qué está pasando mientras piensa", h:"<p>La primera sesión desconcierta porque el agente hace cosas que no le pediste: lee archivos, mira la estructura del proyecto, ejecuta un comando. No se está desviando — está construyendo el contexto que necesita.</p><p>Esa es la diferencia con un chat: un chat solo sabe lo que le pegas, y este va a buscarlo. Por eso la primera petición de una sesión tarda más que las siguientes, y por eso conviene arrancarlo <strong>desde la carpeta del proyecto</strong> y no desde tu carpeta personal.</p><p>Si lo arrancas en el sitio equivocado, va a leer archivos que no tienen que ver con nada y a gastar contexto en ello.</p>"},
+  {k:"p", h:"Una costumbre que vale más que cualquier atajo: <strong>termina cada petición diciendo cómo se sabe que salió bien</strong>. «Añade el campo y comprueba que las pruebas pasan» produce un resultado distinto a «añade el campo», porque la primera le da una condición de parada que puede verificar y la segunda le deja decidir a él cuándo terminó."},
+
   {k:"p", h:"Una sesión se abre escribiendo <code>claude</code> dentro de la carpeta de un proyecto. A partir de ahí escribes en español. No hay sintaxis que aprender."},
   {k:"p", h:"Lo que sí conviene saber desde el principio son cuatro atajos que se escriben dentro de la sesión y empiezan por barra:"},
   {k:"tbl", head:["Escribes","Qué hace","Cuándo lo usas"], rows:[
@@ -136,6 +207,27 @@ const CURSO = [
 { n:1, t:"La memoria del proyecto", sub:"CLAUDE.md: lo que no quieres volver a explicar nunca más.", les:[
 
 { t:"Por qué cada sesión empieza de cero", b:[
+{k:"p", h:"Hay un patrón que conviene evitar: escribir el <code>CLAUDE.md</code> de golpe, un domingo, imaginando todo lo que el agente debería saber. Sale largo, teórico, y con reglas que nadie ha comprobado."},
+  {k:"p", h:"El que funciona crece al revés: empieza casi vacío y gana una línea cada vez que corriges algo. A las dos semanas tiene diez reglas, todas nacidas de un problema real, y todas comprobadas al menos una vez."},
+
+{k:"p", h:"Sobre el tamaño: el archivo se lee en cada sesión, así que ocupa contexto siempre. Trescientas líneas de reglas son trescientas líneas menos para tu código, cada vez."},
+  {k:"p", h:"La proporción sana es que quepa en una pantalla larga. Si necesitas más, lo que sobra suele ser un procedimiento —y eso va en una skill, que solo se carga cuando hace falta— o documentación, que va en su archivo y se referencia."},
+
+{k:"p", h:"Vale la pena poner un ejemplo de la diferencia. Sin reglas, la primera petición de cada día incluye implícitamente: cómo se corren las pruebas, qué gestor de paquetes usáis, qué carpeta no se toca. Se lo dices tú o lo deduce — y deducirlo cuesta lecturas de archivo y a veces se equivoca."},
+  {k:"p", h:"Con reglas, esa información ya está antes de que abras la boca. La primera petición del día pasa de ser un briefing a ser una petición, y esa diferencia se nota más cuanto más veces al día abres una sesión."},
+
+{k:"p", h:"Un detalle práctico: puedes tener <code>CLAUDE.md</code> en subcarpetas, no solo en la raíz. Un monorepo con reglas distintas por paquete se maneja así, y el agente lee el que corresponde a donde está trabajando."},
+
+{k:"p", h:"Hay un efecto secundario de escribir el <code>CLAUDE.md</code> del que casi nadie avisa: <strong>mejora el proyecto</strong>, no solo la relación con el agente."},
+  {k:"p", h:"Poner por escrito qué comandos se usan, qué no se toca y cuándo algo está terminado saca a la luz las cosas que nadie había escrito nunca y que cada persona del equipo tenía en la cabeza de forma ligeramente distinta. Ese archivo acaba siendo lo primero que lee alguien nuevo — agente o humano."},
+  {k:"p", h:"Por eso conviene revisarlo en los pull requests como cualquier otro archivo. Un <code>CLAUDE.md</code> que se queda viejo enseña cosas falsas con mucha autoridad."},
+
+{k:"cr", t:"Tres sitios donde poner memoria, y cuál usar", h:"<p><strong>El proyecto</strong> (<code>CLAUDE.md</code> en la raíz) — lo que vale para cualquiera que trabaje aquí. Se versiona con el código y lo hereda quien clone. Es el que importa.</p><p><strong>Tú</strong> (<code>~/.claude/CLAUDE.md</code>) — tus preferencias personales, en todos tus proyectos. Cómo quieres que te hable, qué idioma, qué nivel de detalle.</p><p><strong>Local</strong> (sin versionar) — lo que solo aplica a tu copia: rutas de tu máquina, credenciales de un entorno de pruebas tuyo.</p><p>El error frecuente es meter en el del proyecto cosas que son tuyas —«explícame las cosas en detalle»— y acabar imponiéndole tu estilo a todo el equipo. Si la frase empieza por «yo prefiero», va en el tuyo, no en el del proyecto.</p>"},
+
+{k:"p", h:"El curso trae un <code>CLAUDE.md</code> de partida con los apartados que de verdad se usan:"},
+  {k:"term", t:"terminal", l:[{p:"$", c:"cp plantilla/CLAUDE.md /ruta/a/tu-proyecto/"}]},
+  {k:"tr", t:"El archivo que crece hasta que deja de leerse", h:"<p>El fallo de este módulo no es no tener <code>CLAUDE.md</code>: es tener uno de doscientas líneas que nadie ha comprobado.</p><p>Cada regla que añades diluye a las demás. Un archivo con cinco reglas que se cumplen vale más que uno con cuarenta declaradas, porque el agente reparte su atención y tú pierdes la capacidad de saber cuáles funcionan.</p><p>La prueba está en el ejercicio de este módulo, y es la parte más importante del curso: <strong>escribe una regla, pide algo que la active, y comprueba que la cumplió sin recordársela</strong>. Si no la cumplió, esa regla está escrita pero no vive.</p><p>Método para saber qué escribir: durante una semana, cada vez que corrijas al agente, anota la corrección en una línea. Al final tendrás entre cinco y diez, y son exactamente las que tu proyecto necesita — no las que recomienda un artículo genérico.</p>"},
+
   {k:"p", h:"Claude Code no recuerda la sesión de ayer. Es una decisión de diseño, no un defecto: así no arrastra suposiciones viejas ni datos de otro proyecto. Pero tiene un coste evidente — vuelves a explicar lo mismo cada mañana."},
   {k:"p", h:"La solución es un archivo de texto llamado <code>CLAUDE.md</code>. Se lee solo al abrir la sesión, y lo que pongas ahí es como si se lo hubieras dicho tú antes de empezar."},
   {k:"cr", t:"Dos alturas, dos propósitos", h:"<p><code>~/.claude/CLAUDE.md</code> — tus preferencias personales, para <strong>todos</strong> tus proyectos. Idioma, estilo, qué no quieres que haga nunca.</p><p><code>CLAUDE.md</code> en la raíz del proyecto — las reglas de <strong>ese</strong> proyecto: cómo se ejecutan las pruebas, qué carpetas no se tocan, qué librería se usa. Este se comparte con el equipo por git.</p><p>Los dos se leen y se suman. Lo personal no pisa lo del proyecto: conviven.</p>"},
@@ -175,6 +267,26 @@ const CURSO = [
 { n:2, t:"Permisos", sub:"Decidir de antemano qué puede hacer sin preguntarte, y qué no debe hacer nunca.", les:[
 
 { t:"El equilibrio que hay que ajustar una vez", b:[
+{k:"p", h:"Un detalle que evita sustos: los permisos se aplican también a lo que el agente ejecuta <em>dentro</em> de un script. Permitir un comando que a su vez ejecuta cualquier cosa es abrir la puerta entera sin darse cuenta."},
+  {k:"p", h:"Por eso las listas de permitidos que funcionan son específicas —<code>npm test</code>, <code>git diff</code>— y no genéricas. Un permiso amplio para «cualquier npm» incluye <code>npm run</code> de un script que hace lo que sea."},
+
+{k:"p", h:"Sobre saltarse los permisos del todo: existe la opción y no conviene salvo en un entorno desechable — un contenedor, una máquina virtual, un repositorio de pruebas."},
+  {k:"p", h:"El riesgo real no es que el agente decida hacer daño: es que un comando razonable con una ruta mal deducida haga algo irreversible en tu máquina. En un contenedor eso cuesta reconstruirlo; en tu portátil, cuesta lo que costara."},
+
+{k:"p", h:"Una consecuencia de los permisos que se descubre tarde: <strong>son lo que hace viable el modo sin conversación</strong>. Si tu configuración depende de que tú apruebes cosas a mano, el agente no puede correr en integración continua ni en un cron."},
+  {k:"p", h:"Por eso conviene resolver los permisos bien una vez, aunque cueste media hora: es el trabajo que después habilita los módulos 9 y 10, no un trámite de seguridad."},
+
+{k:"p", h:"Los permisos admiten patrones, no solo nombres de herramienta. <code>Bash(git diff:*)</code> permite cualquier <code>git diff</code> pero no cualquier <code>git</code>, y esa granularidad es la que hace viable tener una lista de permitidos cómoda sin abrir la mano del todo."},
+
+{k:"p", h:"Los permisos tienen tres sitios donde vivir, y el orden importa: la configuración del proyecto (<code>.claude/settings.json</code>, versionada, la que comparte el equipo), la tuya local para ese proyecto (sin versionar), y la global de tu usuario."},
+  {k:"p", h:"Lo que va en cada sitio: <strong>las denegaciones importantes van en la del proyecto</strong>, para que apliquen a todo el mundo. Los permisos que te dan comodidad a ti —dejarle correr un comando concreto de tu entorno— van en la local, porque son tuyos y puede que a otro no le sirvan."},
+
+{k:"tr", t:"Los dos extremos que se pagan igual", h:"<p><strong>Aprobarlo todo a mano</strong> convierte cada tarea en una sucesión de preguntas y anula la ventaja de que el agente pueda comprobar su trabajo. A la media hora estás aceptando sin leer, que es lo peor de los dos mundos: la fricción sin la seguridad.</p><p><strong>Dar permiso a todo</strong> funciona hasta el día que no. Y el problema no es imaginar al agente haciendo algo destructivo a propósito: es que un comando razonable con un argumento mal deducido borra lo que no debía.</p><p>El punto medio es aburrido y funciona: <strong>todo lo que lee, permitido; lo que escribe, permitido dentro del proyecto; lo que no tiene vuelta atrás, denegado siempre.</strong> Esa tercera lista es corta —<code>git push</code>, borrados recursivos, credenciales— y es la que de verdad te protege.</p>"},
+
+{k:"p", h:"El curso trae una configuración de permisos de partida, pensada para ser restrictiva en lo que importa y cómoda en lo demás:"},
+  {k:"term", t:"terminal", l:[{p:"$", c:"cp -r plantilla/.claude /ruta/a/tu-proyecto/"}]},
+  {k:"p", h:"Léela antes de copiarla. La lista de <code>deny</code> es la parte que conviene entender: bloquea leer <code>.env</code> y archivos de credenciales, y bloquea <code>git push</code> y <code>rm -rf</code>. No porque el agente sea malicioso, sino porque esas cuatro son las que no tienen vuelta atrás."},
+
   {k:"p", h:"Recién instalado, Claude Code pregunta por casi todo. Eso es correcto al principio y cansa a la media hora: acabas dando a «sí» sin leer, que es exactamente el hábito que la protección quería evitar."},
   {k:"p", h:"El arreglo no es desactivar las preguntas, es <strong>decidir de antemano</strong> qué te da igual y qué no. Eso vive en <code>~/.claude/settings.json</code>, en un bloque llamado <code>permissions</code>."},
   {k:"diag", svg:SVG_PERMISOS, cap:"Cada acción pasa por los mismos tres filtros. Lo que no está en ninguna lista te pregunta."},
@@ -209,6 +321,27 @@ const CURSO = [
 { n:3, t:"Comandos propios", sub:"Convertir lo que escribes cada semana en algo que se llama con una barra.", les:[
 
 { t:"Un archivo de texto se vuelve un comando", b:[
+{k:"p", h:"Sobre cuántos tener: pocos y usados. Cinco comandos que invocas a diario valen más que veinte que documentan todo lo que tu equipo sabe hacer, porque los veinte no caben en la cabeza de nadie."},
+  {k:"p", h:"Y si acabas con muchos, el prefijo común es lo que los hace navegables. La lista se agrupa sola y encuentras el que buscas sin recordar su nombre exacto."},
+
+{k:"p", h:"Los comandos pueden ejecutar cosas antes de que el agente lea el resto: por ejemplo, meter la salida de <code>git diff</code> directamente en el contexto sin que tenga que pedirla."},
+  {k:"p", h:"Eso ahorra una ronda entera en los comandos que siempre trabajan sobre lo mismo, y es lo que separa un comando que se siente instantáneo de uno que empieza explorando cada vez."},
+
+{k:"p", h:"Hay comandos que vienen ya con la herramienta —<code>/model</code>, <code>/clear</code>, <code>/help</code>— y los tuyos conviven con ellos. Escribe <code>/</code> y sale la lista entera, la suya y la tuya, que es la forma más rápida de recordar qué tienes."},
+  {k:"p", h:"Un consejo de nomenclatura: si tu equipo va a tener varios, ponles un prefijo común. <code>/pr-revisar</code>, <code>/pr-preparar</code> se agrupan solos en la lista; <code>/revisar</code> y <code>/preparar</code> quedan sueltos entre los del sistema."},
+
+{k:"cr", t:"Cómo se escribe un comando que se acaba usando", h:"<p>La mayoría de los comandos que se escriben el primer día se abandonan el tercero. Los que sobreviven comparten tres cosas:</p><p><strong>Resuelven algo que haces varias veces por semana.</strong> Si es mensual, no vas a recordar que existe.</p><p><strong>Llevan dentro un criterio, no solo pasos.</strong> «Revisa el diff» lo pides sin comando; «revisa el diff con <em>nuestro</em> criterio de qué bloquea» necesita estar escrito.</p><p><strong>Tienen un nombre que adivinarías.</strong> <code>/revisar</code> se encuentra; <code>/rev-pr-check</code> hay que recordarlo, y no lo vas a recordar.</p>"},
+  {k:"p", h:"Y una prueba rápida antes de darlo por bueno: pásaselo a alguien del equipo sin explicárselo. Si tiene que preguntarte qué hace, el que necesita trabajo es el nombre o la descripción, no el contenido."},
+
+{k:"p", h:"Los comandos admiten argumentos, y ahí es donde dejan de ser una nota fija. Escribes <code>$ARGUMENTS</code> en el archivo y lo que teclees después del comando se sustituye ahí."},
+  {k:"p", h:"Eso convierte <code>/revisar</code> en <code>/revisar src/pagos</code>, o un comando de despliegue en uno que recibe el entorno. Un buen comando suele tener una o dos variables y un criterio largo — al revés de como se escriben la primera vez, con muchas variables y ningún criterio."},
+
+{k:"p", h:"Dónde se guardan decide quién los tiene. En <code>.claude/commands/</code> del proyecto, se versionan y los hereda el equipo entero. En <code>~/.claude/commands/</code>, son tuyos en todos tus proyectos."},
+  {k:"p", h:"Como regla: si el comando encapsula un criterio <em>del proyecto</em> —qué es bloqueante aquí, cómo se despliega esto— va en el proyecto. Si encapsula una manía tuya, va en tu carpeta personal."},
+
+{k:"p", h:"El curso trae un comando de ejemplo, <code>/revisar</code>, en <code>plantilla/.claude/commands/revisar.md</code>. Míralo antes de escribir el tuyo: es corto a propósito y muestra la parte que casi todo el mundo omite — <strong>decir también qué NO reportar</strong>."},
+  {k:"tr", t:"Un comando no es un alias", h:"<p>El error de este módulo es escribir comandos que solo ahorran teclear: <code>/test</code> que ejecuta <code>npm test</code>. Para eso ya está la terminal, y el agente en medio solo añade latencia.</p><p>Un comando gana su sitio cuando encapsula <strong>un criterio</strong>, no una acción. <code>/revisar</code> vale porque lleva dentro qué es bloqueante y qué no en tu proyecto — un juicio que si no está escrito, cada sesión lo improvisa distinto.</p><p>Prueba de fuego: si tu comando se puede sustituir por un alias de shell, no debería ser un comando.</p>"},
+
   {k:"p", h:"Cuando llevas un tiempo notas que repites peticiones casi idénticas: «revisa este cambio buscando fallos de seguridad», «escribe el mensaje de commit siguiendo nuestro formato». Cambiar tres palabras cada vez es trabajo perdido."},
   {k:"p", h:"Un <strong>comando propio</strong> es un archivo de texto con esa petición dentro. Si lo guardas como <code>revisar.md</code>, dentro de la sesión lo llamas escribiendo <code>/revisar</code>."},
   {k:"cr", t:"Dónde se guardan", h:"<p><code>~/.claude/commands/</code> — disponibles en todos tus proyectos.</p><p><code>.claude/commands/</code> dentro del proyecto — solo ahí, y se comparten con el equipo por git.</p><p>El nombre del archivo es el nombre del comando. <code>desplegar.md</code> se convierte en <code>/desplegar</code>.</p>"},
@@ -240,6 +373,26 @@ const CURSO = [
 { n:4, t:"Skills", sub:"Procedimientos completos que se cargan solos cuando hacen falta.", les:[
 
 { t:"La diferencia entre una regla y un procedimiento", b:[
+{k:"p", h:"Cómo saber si una skill se está usando: pídele algo que debería activarla y mira si la menciona. Si no aparece, el problema está en la descripción, no en los pasos."},
+  {k:"p", h:"Es la comprobación equivalente a la del módulo 1 con las reglas, y por la misma razón: una skill que nunca se invoca está escrita pero no vive."},
+
+{k:"p", h:"Una skill puede vivir en el proyecto o en tu carpeta personal, igual que los comandos. La decisión es la misma: si el procedimiento es de este proyecto, va versionado con él; si es tu forma de trabajar en todos, va en la tuya."},
+  {k:"p", h:"En equipos, las skills del proyecto son la forma más efectiva de que un procedimiento se haga igual sin escribir un documento que nadie lee. El agente sí lo lee, y lo lee cada vez."},
+
+{k:"p", h:"Hay skills que vienen dadas —para trabajar con documentos de oficina, por ejemplo— y skills que escribes tú. Las primeras sirven para ver el formato antes de escribir la tuya: son un buen modelo de cómo se redacta una descripción que el agente sabe cuándo usar."},
+  {k:"p", h:"El tamaño razonable de una skill propia es una pantalla de pasos más los archivos de apoyo que haga falta. Si el <code>SKILL.md</code> se te va a cinco pantallas, probablemente estás describiendo tres procedimientos y conviene separarlos."},
+
+{k:"p", h:"Una forma de decidir rápido si algo debería ser skill: <strong>¿lo explicarías igual a alguien nuevo cada vez?</strong> Si la respuesta es sí, es un procedimiento y va en una skill. Si cambia según el caso, es criterio y va en las reglas."},
+  {k:"p", h:"Ejemplos de procedimiento: cómo se prepara una versión, cómo se revisa un PR, cómo se añade un idioma nuevo. Ejemplos de criterio: qué estilo usamos, qué no se toca, cuándo algo está terminado."},
+
+{k:"p", h:"Una skill puede traer más archivos además del <code>SKILL.md</code>: guiones, plantillas, documentos de referencia. El agente los lee solo cuando los necesita, no de entrada."},
+  {k:"p", h:"Eso resuelve el problema de siempre con la documentación larga: no puedes meter treinta páginas en las reglas del proyecto porque se comerían el contexto de cada sesión. Con una skill, las treinta páginas están disponibles y solo entran cuando la tarea las pide."},
+
+{k:"tr", t:"La descripción es lo único que se lee para decidir", h:"<p>Una skill que nadie invoca es una skill que no existe, y la causa casi siempre es la misma: la descripción no dice <strong>cuándo</strong> usarla.</p><p>«Ayuda con revisiones de código» no le sirve al agente para decidir nada. «Úsalo cuando se pida revisar un PR, revisar cambios antes de mergear, o comprobar si una rama está lista» sí, porque enumera las formas en que la gente pide realmente esa tarea.</p><p>Escribe la descripción pensando en las palabras que usarías tú, no en el nombre técnico de lo que hace.</p>"},
+
+{k:"p", h:"El curso trae una skill completa en <code>plantilla/.claude/skills/revisar-pr/</code>, con su cabecera, sus pasos y —lo que casi nadie escribe— su criterio de qué es bloqueante."},
+  {k:"cr", t:"Cuándo es regla, cuándo comando y cuándo skill", h:"<p>Las tres cosas se confunden constantemente porque las tres son texto que influye en el agente. Se distinguen por <strong>cuándo entran en juego</strong>:</p><p><strong>Regla</strong> (<code>CLAUDE.md</code>) — vale siempre, en cada sesión, sin que nadie la invoque. «El SQL va parametrizado.»</p><p><strong>Comando</strong> (<code>/nombre</code>) — lo invocas tú, explícitamente, cuando quieres. «Revísame el diff.»</p><p><strong>Skill</strong> — la invoca el agente solo, cuando la tarea encaja con su descripción. De ahí que la descripción sea la parte más importante del archivo: es lo único que el agente lee para decidir si le sirve.</p><p>Si escribes una skill con una descripción vaga, no se va a usar nunca y vas a concluir que las skills no funcionan.</p>"},
+
   {k:"p", h:"Una regla de <code>CLAUDE.md</code> dice <em>cómo comportarse</em> y está siempre presente. Un <strong>skill</strong> enseña <em>cómo hacer algo concreto</em>: un procedimiento con sus pasos, y si hace falta con sus archivos de apoyo."},
   {k:"cr", t:"Por qué no es lo mismo que una regla", h:"<p>Las reglas están siempre cargadas y ocupan sitio en cada conversación. Un skill <strong>se carga solo cuando el agente decide que viene al caso</strong>, o cuando lo llamas escribiendo <code>/nombre-del-skill</code>.</p><p>Esa diferencia es la que permite tener cincuenta procedimientos guardados sin que ninguno estorbe cuando no toca.</p>"},
   {k:"p", h:"Un skill es una carpeta con un archivo <code>SKILL.md</code> dentro. Ese archivo lleva un encabezado con dos datos que importan mucho:"},
@@ -275,6 +428,28 @@ const CURSO = [
 { n:5, t:"Subagentes", sub:"Delegar una parte del trabajo a otro agente con su propio contexto.", les:[
 
 { t:"Para qué sirve tener más de uno", b:[
+{k:"p", h:"Un patrón que rinde y casi nadie monta: un subagente que solo <strong>investiga</strong> y no toca nada. Le pides que averigüe cómo funciona una parte del sistema, vuelve con un resumen, y el agente principal trabaja con eso sin haber gastado su contexto en la exploración."},
+  {k:"p", h:"Es la forma más limpia de trabajar en un proyecto grande: la exploración, que es lo que más contexto consume, ocurre fuera."},
+
+{k:"p", h:"Sobre el coste: cada subagente consume su propio presupuesto. Tres en paralelo es tres veces el gasto de uno, y a veces vale la pena y a veces no."},
+  {k:"p", h:"La regla práctica: si el trabajo que le delegas te habría costado más de diez minutos a ti, casi siempre compensa. Si son tres lecturas de archivo, hacerlo directo sale más barato y más rápido."},
+
+{k:"p", h:"Conviene saber cuándo <em>no</em> usar subagentes, porque es más frecuente que lo contrario. Si la tarea es secuencial —cada paso necesita el resultado del anterior— repartirla no acelera nada y sí multiplica el contexto que hay que reconstruir."},
+  {k:"p", h:"El caso claro es el opuesto: cinco archivos que se pueden revisar sin depender unos de otros, o una investigación donde tres preguntas distintas se pueden responder en paralelo. Ahí sí hay tiempo real que ganar."},
+
+{k:"p", h:"Un uso concreto que vale más que la explicación general: <strong>dos subagentes con criterios distintos sobre el mismo trabajo</strong>. Uno mira correctitud, otro mira seguridad. Cada uno encuentra cosas que el otro no ve, porque están buscando cosas distintas."},
+  {k:"p", h:"Es más útil que pedirle a uno solo «revísalo todo», que produce listas largas y superficiales. Un lente concreto por revisor da hallazgos concretos."},
+
+{k:"p", h:"Los subagentes se guardan como archivos en <code>.claude/agents/</code>, con su descripción y —esto es lo importante— <strong>su propia lista de herramientas</strong>."},
+  {k:"p", h:"Restringirlas no es solo seguridad: es enfoque. Un verificador con permiso para editar acabará arreglando lo que encuentre, y entonces deja de ser un verificador. El del curso solo puede leer y ejecutar, y por eso su informe sirve."},
+
+{k:"p", h:"Un detalle que sorprende la primera vez: <strong>los subagentes no heredan tu conversación</strong>. Arrancan limpios y solo saben lo que les pongas en el encargo."},
+  {k:"p", h:"Eso es una virtud —por eso el verificador funciona— y una trampa: si le pides a un subagente que «arregle lo que acabamos de ver», no sabe de qué hablas. Hay que decírselo entero."},
+
+{k:"p", h:"El curso trae un subagente de ejemplo en <code>plantilla/.claude/agents/verificador.md</code>, y es el que más se usa de los tres artefactos: comprueba si un trabajo terminado cumple lo que se pidió, sin haberlo escrito él."},
+  {k:"cr", t:"Por qué un verificador aparte funciona mejor", h:"<p>Un agente que acaba de escribir doscientas líneas es mal juez de esas doscientas líneas. No por falta de capacidad: por contexto. Tiene delante todo el razonamiento que le llevó a escribirlas, y ese razonamiento es persuasivo — incluso cuando el resultado no funciona.</p><p>Un subagente arranca con contexto limpio. Solo ve lo que le pasas y lo que puede comprobar por su cuenta, así que no tiene nada que defender.</p><p>Es el mismo principio que sostiene los bucles autónomos: <strong>quien hace el trabajo no decide si está terminado</strong>. Aquí se aplica en pequeño, dentro de una sesión, y es lo que más reduce las veces que el agente dice «listo» con las pruebas en rojo.</p>"},
+  {k:"tr", t:"El coste de delegar", h:"<p>Cada subagente vuelve a construir su contexto desde cero: relee archivos, vuelve a explorar, y después te devuelve un informe que el agente principal tiene que leer. Eso multiplica el gasto y el tiempo.</p><p>Delega cuando el trabajo sea <strong>independiente y de tamaño real</strong> —una investigación amplia, varios archivos que se pueden mirar en paralelo, una verificación con criterio propio—. No delegues lo que tú mismo resolverías con tres lecturas de archivo: sale más caro que hacerlo.</p>"},
+
   {k:"p", h:"Hay tareas que ensucian la conversación: buscar en cuarenta archivos dónde se usa una función, revisar un cambio largo, leer registros. Todo eso entra en el contexto, ocupa sitio y te deja una sesión llena de ruido cuando lo que querías era el resumen."},
   {k:"p", h:"Un <strong>subagente</strong> hace ese trabajo en una conversación aparte y te devuelve solo la conclusión. La búsqueda de cuarenta archivos ocurre en su contexto, no en el tuyo."},
   {k:"cr", t:"Cuándo delegar y cuándo no", h:"<p><strong>Delega</strong> cuando el trabajo genera mucho texto intermedio que no necesitas: rastrear algo por el proyecto, revisar con un criterio concreto, resumir registros.</p><p><strong>No delegues</strong> lo que requiere ir y venir contigo. El subagente no te puede preguntar a mitad: recibe una tarea y devuelve un resultado.</p>"},
@@ -307,6 +482,31 @@ const CURSO = [
 { n:6, t:"Hooks", sub:"Ejecutar algo tuyo, siempre, cuando pasa un evento. Sin depender de que el agente se acuerde.", les:[
 
 { t:"La diferencia entre pedirlo y garantizarlo", b:[
+{k:"p", h:"Sobre por dónde empezar: el hook más rentable del primer día es formatear al guardar. Es inofensivo, se nota enseguida, y te enseña el mecanismo sin riesgo de bloquear nada."},
+  {k:"p", h:"Los que bloquean —los que devuelven error— déjalos para cuando tengas claro qué quieres impedir. Un hook bloqueante mal calibrado se nota mucho y en todas partes."},
+
+{k:"p", h:"Los hooks se configuran en el mismo archivo que los permisos, y como ellos pueden ser del proyecto o tuyos. Los del proyecto se versionan, así que todo el equipo tiene la misma garantía."},
+  {k:"p", h:"Ese es el argumento más fuerte para usarlos en equipo: una regla escrita se cumple según quién y cuándo; un hook versionado se cumple igual para todos, incluida la persona que se incorporó ayer."},
+
+{k:"p", h:"Un uso de los hooks que casi nadie considera y que resuelve un problema real: <strong>avisar</strong>. Un hook que suena o notifica cuando el agente termina te deja lanzarle algo largo y volver a lo tuyo sin estar mirando la terminal."},
+  {k:"p", h:"Suena menor y cambia bastante el uso diario: la alternativa es quedarse esperando, que es exactamente lo que estas herramientas deberían evitarte."},
+
+{k:"p", h:"Un hook recibe información sobre lo que está pasando —qué herramienta, qué archivos— en variables de entorno, y puede decidir en función de eso. Y si termina con un código de error, bloquea la operación."},
+  {k:"p", h:"Ahí está toda la potencia y todo el peligro: un hook mal escrito que devuelve error por accidente bloquea cosas legítimas en todas tus sesiones. Por eso los que solo avisan o formatean deben terminar siempre en éxito, y solo los que de verdad tienen que bloquear devuelven error."},
+
+{k:"p", h:"Los hooks se enganchan en varios momentos, y elegir bien cuál cambia lo que puedes hacer:"},
+  {k:"tbl", head:["Momento","Cuándo se ejecuta","Para qué sirve"], rows:[
+    ["<code>PreToolUse</code>","Antes de que la herramienta actúe","Bloquear lo que no debe pasar"],
+    ["<code>PostToolUse</code>","Después, con el resultado","Formatear, normalizar, comprobar"],
+    ["<code>Stop</code>","Cuando el agente cree que terminó","Comprobar que de verdad terminó"],
+    ["<code>SessionStart</code>","Al abrir la sesión","Cargar estado, avisar de algo pendiente"]
+  ]},
+  {k:"p", h:"El de <code>Stop</code> es el menos usado y el más interesante: es donde se pone la comprobación que impide que «listo» signifique «listo para mí»."},
+
+{k:"tr", t:"Un hook mal escrito rompe todas las sesiones", h:"<p>Los hooks se ejecutan en cada operación que coincida con su patrón, así que un error ahí no falla una vez: falla siempre, en todo lo que hagas.</p><p>Dos precauciones que ahorran una tarde. <strong>Termina en <code>|| true</code></strong> los hooks que no deben bloquear —formatear, avisar— para que un fallo del formateador no impida guardar archivos. Y <strong>pruébalo primero a mano</strong> en la terminal con un archivo de ejemplo, antes de ponerlo en la configuración.</p><p>El hook del curso lleva las dos cosas: <code>--no-install</code> para no instalar nada por sorpresa, y <code>|| true</code> para que su fallo no se lleve por delante la edición.</p>"},
+
+{k:"cr", t:"La frontera entre prompt y código", h:"<p>Este módulo tiene la idea más transferible del curso, y vale mucho más allá de Claude Code.</p><p>Un prompt es una <strong>instrucción probabilística</strong>: se cumple casi siempre. Un hook es <strong>código</strong>: se cumple siempre, porque no depende de que nadie lo interprete.</p><p>La consecuencia práctica es una regla de decisión: <strong>si el incumplimiento ocasional te cuesta caro, no lo pidas — garantízalo</strong>. Formatear el código al guardar puede ser una regla; bloquear un despliegue a producción hasta que pasen las pruebas tiene que ser un hook.</p><p>Casi todo el mundo descubre esta frontera al revés: escribiendo instrucciones cada vez más enfáticas —«CRÍTICO», «SIEMPRE», «NUNCA»— hasta que entiende que el problema no era el énfasis, sino la capa.</p>"},
+
   {k:"p", h:"Puedes escribir en <code>CLAUDE.md</code> «ejecuta el formateador después de editar». A veces lo hará y a veces no: es una instrucción, y las instrucciones se interpretan."},
   {k:"p", h:"Un <strong>hook</strong> no se interpreta. Es un comando tuyo que el programa ejecuta <strong>siempre</strong> que ocurre un evento, decida el agente lo que decida. Es la diferencia entre pedir algo y garantizarlo."},
   {k:"cr", t:"Los eventos que más se usan", h:"<p><code>PreToolUse</code> — justo antes de que use una herramienta. Puede <strong>bloquearla</strong>: es el sitio para prohibir de verdad algo peligroso.</p><p><code>PostToolUse</code> — después. El sitio del formateador y del linter.</p><p><code>UserPromptSubmit</code> — cuando envías un mensaje. Sirve para inyectar contexto automáticamente.</p><p><code>Stop</code> — cuando el agente termina de responder. Para avisos y comprobaciones finales.</p>"},
@@ -340,6 +540,25 @@ const CURSO = [
 { n:7, t:"MCP", sub:"Darle acceso a cosas que están fuera de tu carpeta.", les:[
 
 { t:"Qué problema resuelve", b:[
+{k:"p", h:"Comprobar qué tienes conectado es una orden, y conviene mirarlo de vez en cuando: los servidores se acumulan igual que los plugins, y cada uno sigue ocupando su sitio aunque hayas dejado de usarlo."},
+  {k:"p", h:"Una revisión cada pocos meses, quitando lo que no invocas, devuelve contexto a lo que sí haces."},
+
+{k:"p", h:"Vale la pena distinguir MCP de las herramientas que Claude Code ya trae. Leer archivos, ejecutar comandos o buscar en la web son suyas y están siempre. MCP es para lo que <em>no</em> es tu máquina: un sistema externo con su propia autenticación."},
+  {k:"p", h:"La confusión frecuente es montar un servidor MCP para algo que ya se puede hacer con un comando. Si <code>psql</code> está instalado y el agente puede ejecutarlo, quizá no necesites el servidor — necesitas el permiso."},
+
+{k:"p", h:"Una recomendación práctica sobre por dónde empezar con MCP: por el servidor que te ahorre el copiar y pegar que más repites. Si cada día pegas resultados de consultas, empieza por la base de datos; si cada día pegas descripciones de incidencias, por el gestor de incidencias."},
+  {k:"p", h:"Empezar por «el que parece más potente» lleva casi siempre a tener conectado algo que no usas, con el coste de contexto que eso arrastra."},
+
+{k:"p", h:"Un ejemplo hace más que la definición. Sin MCP, para que el agente sepa qué hay en tu base de datos tienes que ejecutar la consulta tú y pegarle el resultado. Con MCP, le pides «mira cuántos pedidos quedaron en estado pendiente esta semana» y lo consulta él."},
+  {k:"p", h:"La diferencia no es la comodidad de no copiar y pegar: es que puede <strong>iterar</strong>. Ve el resultado, se da cuenta de que la consulta no era la correcta, y prueba otra. Eso con copiar y pegar cuesta tres rondas tuyas."},
+
+{k:"p", h:"Conviene saber distinguir los dos sitios donde se configura un servidor MCP, porque decide quién lo tiene. En el proyecto (<code>.mcp.json</code>, versionado) lo hereda el equipo; en tu configuración de usuario, es solo tuyo."},
+  {k:"p", h:"Y una regla sobre credenciales que no admite excepción: <strong>nunca en el archivo versionado</strong>. Van en variables de entorno que el archivo referencia. Un <code>.mcp.json</code> con una clave dentro es una clave publicada en cuanto alguien clone el repositorio."},
+
+{k:"cr", t:"Qué es MCP en una frase, y qué no es", h:"<p>Es un protocolo para que el agente hable con sistemas que no son archivos: tu base de datos, tu gestor de incidencias, un navegador. Lo que gana es que esas capacidades aparecen como herramientas suyas, así que puede <strong>consultar</strong> en vez de pedirte que le pegues el resultado.</p><p>Lo que no es: una forma de darle más inteligencia, ni un sustituto de tener buenas reglas. Un agente con diez servidores MCP y sin <code>CLAUDE.md</code> sigue sin saber cómo se ejecutan tus pruebas.</p><p>Y una advertencia de seguridad que conviene tomar en serio: un servidor MCP puede leer y escribir en el sistema al que conecta. Conectar uno es darle esa capacidad al agente, así que revisa qué permisos tiene la credencial que le das — casi siempre puede ser de solo lectura.</p>"},
+
+{k:"tr", t:"Cada servidor MCP tiene un coste que no se ve", h:"<p>La tentación con MCP es conectar todo lo que existe: base de datos, gestor de incidencias, calendario, navegador. Y hay un coste que no aparece hasta que ya duele.</p><p>Cada servidor conectado <strong>mete sus herramientas en el contexto de cada sesión</strong>, la use o no. Con cinco servidores medianos, una parte notable del presupuesto de contexto se va en describir capacidades que no vas a usar hoy — y ese espacio sale del que tenía para tu código.</p><p>Conecta lo que uses de verdad esta semana. Es fácil añadir uno más cuando haga falta y es muy difícil notar que sobra.</p>"},
+
   {k:"p", h:"Claude Code lee tu proyecto y ejecuta comandos. Pero tu trabajo no vive solo ahí: hay tickets, una base de datos, la documentación de una librería, el panel donde despliegas."},
   {k:"p", h:"<strong>MCP</strong> es el enchufe estándar para eso. Un servidor MCP le da al agente un conjunto de herramientas nuevas — consultar tus tickets, leer una tabla — sin que tengas que copiar y pegar información."},
   {k:"cr", t:"Vocabulario mínimo", h:"<p>Las siglas son de <span class=\"jerga\" title=\"Model Context Protocol: un estándar abierto para conectar asistentes con herramientas y datos externos.\">Model Context Protocol</span>. Lo importante es que es <strong>un estándar</strong>: el mismo servidor sirve para Claude Code, para Cursor y para otras herramientas. Lo que configures aquí no se pierde si cambias.</p>"},
@@ -368,6 +587,24 @@ const CURSO = [
 { n:8, t:"Plugins", sub:"Instalar de una vez lo que otros ya configuraron.", les:[
 
 { t:"Un paquete con todo dentro", b:[
+{k:"p", h:"Un plugin bien hecho es también documentación. Al leerlo se ve cómo alguien resolvió un flujo entero: qué puso en reglas, qué en comandos, qué garantizó con hooks."},
+  {k:"p", h:"Aunque no lo instales, leer dos o tres enseña más sobre cómo se combinan las piezas que cualquier explicación — incluida esta."},
+
+{k:"p", h:"Sobre de dónde salen: hay un mercado de plugins públicos y también se pueden distribuir por un repositorio propio, que es lo habitual dentro de una empresa."},
+  {k:"p", h:"Para uso interno, un repositorio de git con el plugin dentro basta. No hace falta publicar nada ni pasar por ningún registro, y así el contenido no sale de la organización."},
+
+{k:"p", h:"Un plugin puede traer también servidores MCP configurados, no solo comandos y skills. Eso lo convierte en la forma más completa de repartir una configuración: alguien instala el plugin y tiene lo mismo que tú, incluidas las conexiones."},
+  {k:"p", h:"Con la salvedad de siempre: las credenciales no van dentro. El plugin trae la configuración; cada persona pone su clave en su entorno."},
+
+{k:"tr", t:"El plugin que instalas y nunca usas", h:"<p>El patrón es reconocible: instalas tres plugins interesantes, cada uno trae cuatro comandos, y a la semana no recuerdas ninguno de los doce. El coste no es cero — sus hooks siguen corriendo y sus skills siguen ocupando sitio en cada sesión.</p><p>Instala uno cada vez y dale una semana. Si en esa semana no lo invocaste, desinstálalo: no era para ti, o no era para ahora.</p><p>Lo mismo vale para lo que construyas tú. Un plugin propio con dos cosas que el equipo usa a diario vale más que uno con veinte que documentan todo lo que sabéis hacer.</p>"},
+
+{k:"p", h:"Vale la pena mirar plugins existentes antes de escribir el tuyo, aunque solo sea para ver cómo están montados. Muchos son un buen ejemplo de cómo se combinan comandos, skills y hooks para un flujo concreto."},
+  {k:"p", h:"Y si acabas escribiendo uno para tu equipo, la parte que decide si se usa no es el contenido: es el README. Un plugin sin instrucciones de qué hace y cuándo conviene usarlo se instala una vez y se olvida."},
+
+{k:"p", h:"Y una nota sobre instalar plugins ajenos: un plugin puede traer hooks, y un hook es un comando que se ejecuta en tu máquina. Léelo antes, como leerías un script que te pasan por correo. La mayoría son inofensivos y esa comprobación cuesta dos minutos."},
+
+{k:"cr", t:"Cuándo empaquetar y cuándo no", h:"<p>Un plugin junta comandos, skills, subagentes y hooks en algo instalable. Su valor no es técnico —todo eso funciona igual suelto— sino de <strong>distribución</strong>: que otra persona lo tenga exactamente igual que tú, con una orden.</p><p>Por eso solo compensa cuando hay alguien más. Si trabajas solo, tus archivos en <code>.claude/</code> versionados con el proyecto hacen lo mismo con menos ceremonia.</p><p>El caso donde sí gana con claridad: un equipo con varios repositorios donde quieres que la revisión de código se haga igual en todos. Ahí el plugin es el mecanismo, y la alternativa es copiar y pegar hasta que las copias diverjan.</p>"},
+
   {k:"p", h:"Los cuatro módulos anteriores son cosas que escribes tú: comandos, skills, subagentes, hooks. Un <strong>plugin</strong> es un paquete que trae varias de esas piezas juntas, ya configuradas, listo para instalar."},
   {k:"p", h:"Se instalan desde un <span class=\"jerga\" title=\"Repositorio que publica una lista de plugins disponibles para instalar.\">marketplace</span>, que no es más que un repositorio con una lista. Puedes usar los públicos o montar el de tu equipo, que es la forma práctica de que ocho personas trabajen con la misma configuración."},
   {k:"cr", t:"Cuándo instalar y cuándo escribir el tuyo", h:"<p><strong>Instala</strong> cuando el problema no es tuyo: revisar pull requests, trabajar con un proveedor concreto, un flujo estándar de la industria.</p><p><strong>Escribe el tuyo</strong> cuando el procedimiento es de tu casa. Un plugin ajeno que hace el 70% de lo que necesitas suele costar más de adaptar que escribir el tuyo desde cero.</p>"},
@@ -395,6 +632,22 @@ const CURSO = [
 { n:9, t:"Sin sesión interactiva", sub:"Llamarlo desde un script, un cron o tu integración continua.", les:[
 
 { t:"El mismo agente, sin conversación", b:[
+{k:"p", h:"Sobre el coste en automatización: aquí es donde se descontrola si nadie lo mira. Un agente en cada pull request de un repositorio activo son muchas ejecuciones al día."},
+  {k:"p", h:"Empieza por lo programado —una vez al día, una vez por semana— antes que por cada evento. El cron te deja ver el gasto real antes de multiplicarlo por el número de PR."},
+
+{k:"p", h:"Sobre dónde se ejecuta esto de verdad en la práctica: integración continua, ganchos de git, tareas programadas. Los tres sitios donde ya tienes automatización y donde el agente encaja sin inventar infraestructura nueva."},
+  {k:"p", h:"Y en los tres aplica lo mismo que ya sabes del módulo de permisos: lo que no esté permitido de antemano va a bloquear la ejecución, porque no hay nadie para autorizarlo."},
+
+{k:"p", h:"Un uso que rinde desde el primer día sin montar nada: <strong>pasarle texto por una tubería</strong>. Los registros de un fallo, la salida de un comando que no entiendes, un diff largo. El agente lo lee y te contesta, sin abrir sesión."},
+  {k:"p", h:"Es la puerta de entrada más natural a este modo, y la que hace evidente el salto siguiente: si eso funciona a mano, funciona igual dentro de un script."},
+
+{k:"tr", t:"Lo que sale mal cuando nadie mira", h:"<p>Tres fallos que en una sesión interactiva se corrigen solos y aquí no:</p><p><strong>La tarea se queda a medias y termina igual.</strong> Sin condición de aceptación escrita, el agente decide él cuándo terminó, y con frecuencia decide pronto. Ponla siempre en el encargo.</p><p><strong>Se queda esperando.</strong> Si algo le pide confirmación —un permiso que no diste, un comando interactivo— no hay nadie para contestar. Los permisos tienen que estar resueltos <em>antes</em>.</p><p><strong>Cuesta más de lo previsto.</strong> Una tarea mal acotada puede iterar mucho. Conviene poner un límite de tiempo o de intentos en el propio encargo.</p><p>Los tres se resuelven en el mismo sitio: escribiendo el encargo completo antes de lanzarlo, en vez de irlo aclarando sobre la marcha.</p>"},
+
+{k:"p", h:"La forma de salida importa más de lo que parece. En modo no interactivo puedes pedir el resultado como JSON, y eso convierte al agente en algo que otro programa puede consumir: un paso más de una tubería, no un final."},
+  {k:"p", h:"Es la diferencia entre «me escribe un resumen que leo yo» y «me devuelve un veredicto que decide si el pipeline sigue». La segunda es la que hace que esto encaje en integración continua sin adaptaciones."},
+
+{k:"cr", t:"Lo que cambia cuando no hay nadie mirando", h:"<p>Sin conversación no hay a quién preguntarle, y eso cambia cómo se escribe la petición. Todo lo que en una sesión resolverías con un «no, así no» tiene que estar en el encargo desde el principio: el objetivo, las restricciones y <strong>cómo se sabe que terminó</strong>.</p><p>Es también donde los permisos dejan de ser una comodidad y pasan a ser lo único que te protege: no vas a estar ahí para decir que no.</p><p>La forma más útil de este modo no es «que haga la tarea entera solo», sino encadenarlo: un comando que revisa cada pull request, otro que resume los cambios de la semana. Tareas acotadas, repetitivas y con criterio escrito.</p>"},
+
   {k:"p", h:"Todo lo anterior ocurre en una sesión donde tú escribes y él responde. Pero el mismo programa se puede llamar <strong>una sola vez, con una instrucción, y recoger la respuesta</strong>. Eso abre la puerta a automatizar."},
   {k:"p", h:"Se hace con <code>-p</code> (de <em>print</em>): ejecuta la petición, imprime el resultado y termina."},
   {k:"term", t:"terminal", l:[{p:"$", c:"claude -p \"resume en tres líneas qué cambió en el último commit\""}]},
@@ -428,6 +681,22 @@ const CURSO = [
 { n:10, t:"El día a día con git", sub:"Dónde encaja el agente en el ciclo de trabajo real, y dónde no.", les:[
 
 { t:"Lo que conviene delegarle y lo que no", b:[
+{k:"p", h:"Y un cierre sobre la relación con git en general: todo lo que hace seguro trabajar con un agente ya existía antes de que hubiera agentes. Ramas, commits pequeños, poder deshacer."},
+  {k:"p", h:"Quien ya trabajaba así apenas cambia nada y gana mucho. Quien no, va a notar que la primera mejora útil de este curso no fue configurar al agente: fue ordenar cómo trabaja con su propio repositorio."},
+
+{k:"p", h:"Una última costumbre que rinde más de lo que parece: pedirle que <strong>lea el diff antes de que lo leas tú</strong> y te cuente qué cambió y qué le preocupa."},
+  {k:"p", h:"No sustituye tu revisión: la ordena. Llegas al diff sabiendo dónde mirar, y eso convierte una revisión de veinte minutos en una de cinco sin perder lo que importa."},
+
+{k:"p", h:"Con esto se cierra el curso. Tienes las reglas del proyecto escritas, los permisos ajustados, comandos y skills para lo que repites, un verificador que comprueba lo que tú no vas a comprobar, hooks para lo que no puede fallar, y el agente corriendo sin conversación donde hace falta."},
+  {k:"p", h:"Todo eso vive en tu repositorio, se versiona con el código y lo hereda quien clone. Que es la diferencia entre haber configurado tu máquina y haber configurado el proyecto."},
+
+{k:"cr", t:"Ramas: la red que hace que todo lo anterior sea seguro", h:"<p>Una costumbre que cambia el nivel de riesgo de todo el curso: <strong>trabaja en una rama cuando le pidas algo grande</strong>.</p><p>No es por ceremonia de proceso. Es que una rama convierte cualquier resultado —bueno, malo o incomprensible— en algo que se descarta con un comando. Sin ella, un cambio de quince archivos que no acaba de funcionar es una tarde de deshacer a mano.</p><p>Con esa red puesta, puedes darle permisos más amplios y dejarle iterar más, que es cuando estas herramientas rinden de verdad. La gente que las usa con miedo suele ser la que no tiene dónde caerse.</p>"},
+
+{k:"p", h:"Una forma concreta de aprovecharlo con git que casi nadie usa: <strong>pedirle que investigue el historial</strong>. «¿En qué commit se introdujo este comportamiento?» es una pregunta que a mano cuesta veinte minutos de <code>git log</code> y <code>git bisect</code>, y que él contesta en dos porque puede ejecutar los dos comandos e interpretar la salida."},
+  {k:"p", h:"Ese tipo de tarea —buscar en un historial, cruzar información de varios commits, encontrar cuándo cambió algo— es donde la diferencia con hacerlo tú es mayor. Escribir código es donde más se le mira; investigar es donde más ahorra."},
+
+{k:"tr", t:"Lo que no conviene delegarle nunca", h:"<p>Hay tres cosas donde el agente es rápido y tú eres responsable, y la velocidad no compensa:</p><p><strong>Escribir el mensaje de commit sin leerlo.</strong> Es el registro que va a leer alguien dentro de un año, tú incluido. Que lo redacte, sí; que se publique sin que lo mires, no.</p><p><strong>Resolver conflictos de fusión.</strong> Un conflicto es dos intenciones que chocan, y la información para decidir cuál gana casi nunca está en el código.</p><p><strong>Cualquier cosa contra la rama principal.</strong> <code>push</code>, <code>rebase</code>, <code>reset --hard</code>. Por eso están en la lista de denegados de la plantilla.</p><p>Lo que sí conviene delegar entero: leer el diff y contarte qué cambió, preparar el borrador del mensaje, encontrar en qué commit se introdujo un fallo. Ahí es donde de verdad ahorra.</p>"},
+
   {k:"p", h:"Claude Code es bueno con git porque git se maneja por comandos y devuelve texto: puede ver el estado, leer un diff y proponer un mensaje de commit que describa lo que de verdad cambió."},
   {k:"p", h:"Pero hay una asimetría que conviene respetar desde el principio."},
   {k:"tbl", head:["Delégale","Hazlo tú"], rows:[
