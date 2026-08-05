@@ -71,3 +71,31 @@ Los comandos salen de ejecutar `claude --help` y los subcomandos reales, no de l
 advertencia de que **`claude mcp list` imprime las credenciales en texto plano** apareció
 explorando la CLI para diseñar los checkpoints, y ahora es una de las trampas del módulo 7: es
 justo el comando que uno enseña cuando comparte pantalla.
+
+## Lo que te llevas
+
+`plantilla/` es el kit que se copia al proyecto y monta las cinco capas del curso:
+
+- **`CLAUDE.md`** — reglas del proyecto, con los apartados que se usan.
+- **`.claude/settings.json`** — permisos cuya lista de denegados cubre las cuatro
+  operaciones sin vuelta atrás, y un hook de formateo que no bloquea si falla.
+- **`.claude/commands/revisar.md`** — un comando que lleva un criterio dentro, no un alias.
+- **`.claude/skills/revisar-pr/`** — una skill con las condiciones de disparo explícitas.
+- **`.claude/agents/verificador.md`** — un subagente que puede leer y ejecutar pero
+  **no editar**: un verificador que arregla deja de ser un verificador.
+
+```bash
+cp plantilla/CLAUDE.md /ruta/a/tu-proyecto/
+cp -r plantilla/.claude /ruta/a/tu-proyecto/
+```
+
+## Soluciones de referencia
+
+`solucion/` trae un ejemplo trabajado por ejercicio, con las decisiones que se
+probaron y se descartaron. Míralas después de intentarlo.
+
+## PDF descargable
+
+```bash
+node scripts/exportar-pdf.mjs
+```
