@@ -4,3 +4,7 @@ progreso.json
 *.log
 .vercel
 .claude/
+# …salvo el kit que el alumno se lleva: es el entregable del curso, no la
+# configuración de quien lo escribió.
+!plantilla/.claude/
+!plantilla/.claude/**
